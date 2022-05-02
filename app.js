@@ -1,7 +1,11 @@
 const express = require('express');
-const mongoose = require('mongoose');
-require('dotenv/config');
 const app = express();
+const mongoose = require('mongoose');
+// bodyParser "translates" posts requests from Postman into json format
+const bodyParser = require('body-parser');
+require('dotenv/config');
+
+app.use(bodyParser.json());
 
 // Import routes
 
