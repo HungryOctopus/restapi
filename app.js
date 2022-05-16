@@ -3,8 +3,12 @@ const app = express();
 const mongoose = require('mongoose');
 // bodyParser "translates" posts requests from Postman into json format
 const bodyParser = require('body-parser');
+const cors = require('cors');
+//dotenv: so the name and password of the database isn't visible
 require('dotenv/config');
 
+//MIDDLEWARES
+app.use(cors());
 app.use(bodyParser.json());
 
 // Import routes
@@ -26,5 +30,5 @@ mongoose.connect(process.env.DB_CONNECTION, { useNewUrlParser: true }, () =>
   console.log('connected to DB')
 );
 
-// How do we start listening to the server?
+// Listens to the server
 app.listen(3000);

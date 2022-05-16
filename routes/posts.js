@@ -1,12 +1,29 @@
+const read = require('body-parser/lib/read');
 const express = require('express');
 const router = express.Router();
 const Post = require('../models/Post');
 
-router.get('/', (req, res, send) => {
-  res.send('Yeaaaaaah baby posts');
+//GETS ALL THE POSTS
+router.get('/', async (req, res, send) => {
+  try {
+    const posts = await Post.find();
+    res.json(posts);
+  } catch (err) {
+    res.json({ message: err });
+  }
 });
 
-//with async await
+//GETS A SPECIFIC POST
+router.get('/:postId', async (req, res) => {
+  try {
+    const post = await Post.findById(req.params.postId);
+    res.json(post);
+  } catch (err) {
+    res.json({ message: err });
+  }
+});
+
+//SUBMITS A POST
 router.post('/', async (req, res) => {
   const post = new Post({
     title: req.body.title,
@@ -20,21 +37,27 @@ router.post('/', async (req, res) => {
   }
 });
 
-// Without Async await
-// router.post('/', (req, res) => {
-//   const post = new Post({
-//     title: req.body.title,
-//     description: req.body.description
-//   });
+//DELETE A SPECIFIC POST
+router.delete('/:postId', async (req, res) => {
+  try {
+    const removedPost = await Post.deleteOne({ _id: req.params.postId });
+    res.json(removedPost);
+  } catch (err) {
+    res.json({ message: err });
+  }
+});
 
-//   post
-//     .save()
-//     .then((data) => {
-//       res.json(data);
-//     })
-//     .catch((err) => {
-//       res.json('Noooo an error');
-//     });
-// });
+//UPDATE A POST
+router.patch('/:postId', async (req, res) => {
+  try {
+    const updatedPost = await Post.updateOne(
+      { _id: req.params.postId },
+      { $set: { title: req.body.title } }
+    );
+    res.json(updatedPost);
+  } catch (err) {
+    res.json({ message: err });
+  }
+});
 
 module.exports = router;
